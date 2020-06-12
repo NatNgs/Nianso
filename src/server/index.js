@@ -12,37 +12,53 @@ SongBrowser.load(config,
 );
 
 app.get('/', (req, res) => {
-	console.debug(req.originalUrl);
-	res.sendFile(path.resolve(__dirname + '/../client/home.html'));
+	const file = path.resolve(__dirname + '/../client/home.html');
+	res.sendFile(file);
+	console.debug(req.originalUrl + ' ('+ file + ')');
 });
+
 app.get('/get/:index', (req, res) => {
-	console.debug(req.originalUrl);
 	const nextSongInfo = SongBrowser.getSongInfoByRandomOrderIndex(req.params.index);
 	if(!nextSongInfo) {
+		console.debug(req.originalUrl + ' (Failed)');
 		return res.send({});
 	}
 	const ext = utils.getExt(nextSongInfo.origin);
 	nextSongInfo.url = '/audio/'+ nextSongInfo.id +'.'+ ext;
 	nextSongInfo.type = 'audio/' + ext;
 	SongBrowser.updateMetadata(nextSongInfo, () => res.send(nextSongInfo));
+	console.debug(req.originalUrl + ' (' + nextSongInfo.url +')');
 });
+
 app.get('/scripts/:filename', (req, res) => {
-	res.sendFile(path.resolve(__dirname + '/../client/scripts') + '/' + req.params.filename);
+	const file = path.resolve(__dirname + '/../client/scripts') + '/' + req.params.filename;
+	res.sendFile(file);
+	console.debug(req.originalUrl + ' (' + file + ')');
 });
+
 app.get('/styles/:filename', (req, res) => {
-	res.sendFile(path.resolve(__dirname + '/../client/styles') + '/' + req.params.filename);
+	const file = path.resolve(__dirname + '/../client/styles') + '/' + req.params.filename;
+	res.sendFile(file);
+	console.debug(req.originalUrl + ' (' + file + ')');
 });
+
 app.get('/audio/:filename([0-9a-z]+).:ext', (req, res, nxt) => {
-	console.debug(req.originalUrl);
-	const path = SongBrowser.getSongInfoById(req.params.filename).path;
-	if(utils.getExt(path) === req.params.ext)
-		return res.sendFile(path);
+	const file = SongBrowser.getSongInfoById(req.params.filename).path;
+	if(utils.getExt(file) === req.params.ext) {
+		res.sendFile(file);
+		console.debug(req.originalUrl + ' (' + file + ')');
+		return;
+	}
 	nxt();
 });
+
 app.get('*', (req, res) => {
 	console.debug(req.originalUrl);
 	res.status(404).send('404: ' + req.originalUrl);
 });
+
+//
+// Launching server
 
 app.listen(config.serverPort, () => {
 	// Listing IP and ports available for connexion (LAN)

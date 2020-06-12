@@ -10,11 +10,18 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.15-rc1/mediaelement-and-player.min.js"></script>
 	<script src="scripts/main.js"></script>
+	<script src="scripts/base64.js"></script>
 </head>
 <body>
-
 	<audio id="mediaplayer" controls="show" width="100%"></audio>
-	<button onclick="previous()">Previous</button>
-	<button onclick="next()">Next</button>
+
+	<div id="info_div"></div>
+
+	<div id="nav_div">
+		<button id="navPrev" onclick="previous()">Previous</button>
+		<button id="navNext" onclick="next()">Ok & Next</button>
+		<button id="navSkip" onclick="skip()">Cancel & Skip</button>
+		<label id="navAuto_label"><input type="checkbox" id="navAuto" checked="checked"/>Auto</label>
+	</div>
 </body>
 </html>

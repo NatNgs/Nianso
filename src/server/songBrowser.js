@@ -4,7 +4,7 @@ const utils = require('./utils');
 const musicMetadata = require('music-metadata');
 
 let ids = 0;
-const getNewId = () => (((ids++)+Math.random())*1000|0).toString(36);
+const getNewId = () => 's'+ (((ids++)+Math.random())*10000|0).toString(36);
 
 function SongBrowser() {
 	/**
@@ -21,7 +21,11 @@ function SongBrowser() {
 
 	const isThisFileASong = (file) => _config.songExts.indexOf(utils.getExt(file)) >= 0;
 
+	const alreadyListedFolders = {};
 	const listSongs = function(folderPath, cbAllLoaded) {
+		if(alreadyListedFolders[folderPath]) return cbAllLoaded();
+		alreadyListedFolders[folderPath] = true;
+
 		let todo = 0;
 		const newTask = () => todo++;
 		const taskDone = () => (--todo<=0) && cbAllLoaded();
@@ -29,16 +33,16 @@ function SongBrowser() {
 		fs.readdir(folderPath, (err, files) => {
 			newTask();
 			if (!err && files) {
-				for(let file of files) {
+				for(const file of files) {
 					newTask();
-					file = path.resolve(folderPath, file);
-					fs.stat(file, (err, stat) => {
+					const filePath = path.resolve(folderPath, file);
+					fs.stat(filePath, (err, stat) => {
 						if (stat) {
 							if(stat.isDirectory()) {
 								newTask();
-								listSongs(file, taskDone);
+								listSongs(filePath, taskDone);
 							} else if(isThisFileASong(file)) {
-								_data.toSort.push({id: getNewId(), origin: file, path: file});
+								_data.toSort.push({id: getNewId(), origin: filePath, path: filePath});
 							}
 						}
 						taskDone();
