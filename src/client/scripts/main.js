@@ -16,13 +16,20 @@ $(document).ready(() => {
 	});
 });
 
+let _editableFields = {};
 function createPropertyLine(key, value, editionKey=null, editionType='text') {
 	let displayValue;
 	if(editionKey) {
 		if(editionType === 'textarea') {
-			displayValue = $('<textarea></textarea>').html(value);
+			displayValue = $('<textarea></textarea>').val(value);
+			_editableFields[editionKey] = (() => displayValue.val());
 		} else {
 			displayValue = $(`<input type="${editionType}"/>`).val(value);
+			if(editionType === 'number') {
+				_editableFields[editionKey] = (() => +displayValue.val());
+			} else {
+				_editableFields[editionKey] = (() => displayValue.val());
+			}
 		}
 	} else {
 		if(editionType === 'pictures') {
@@ -51,7 +58,8 @@ function createPropertyLine(key, value, editionKey=null, editionType='text') {
 }
 const spetialMetadataCommonKeys = ['artist', 'artists', 'title', 'subtitle', 'album', 'albumartist', 'rating', 'comment', 'picture'];
 function setSong(data) {
-	console.log(data);
+	_editableFields = {};
+
 	const container = $('#info_div').empty();
 	// File name
 	const folderStruct = data.path.replace(/\\+/g, '/').split('/');
@@ -64,11 +72,6 @@ function setSong(data) {
 
 	if(!data.metadata) data.metadata = {};
 	if(!data.metadata.common) data.metadata.common = {};
-
-	// Pictures
-	if(data.metadata.common.picture) {
-		container.append(createPropertyLine('Pictures', data.metadata.common.picture, null, 'pictures'));
-	}
 
 	// Artists
 	const artist1 = data.metadata.common.artist;
@@ -102,6 +105,11 @@ function setSong(data) {
 
 	container.append('<hr/>');
 
+	// Pictures
+	if(data.metadata.common.picture) {
+		container.append(createPropertyLine('Pictures', data.metadata.common.picture, null, 'pictures'));
+	}
+
 	// Common data
 	for(const key in data.metadata.common) {
 		if(spetialMetadataCommonKeys.indexOf(key) >= 0) continue;
@@ -118,6 +126,7 @@ function setSong(data) {
 	// Sorter
 }
 
+let _currSong = null;
 let currSongIndex = -1;
 function getSong() {
 	$.ajax({
@@ -125,6 +134,7 @@ function getSong() {
 		dataType: 'json',
 		url: '/get/'+ currSongIndex,
 		success: (data) => {
+			_currSong = data;
 			mediaplayer.pause();
 			mediaplayer.setSrc(data.url);
 			mediaplayer.load();
@@ -138,6 +148,20 @@ function skip() { // eslint-disable-line no-unused-vars
 	getSong();
 }
 function next() { // eslint-disable-line no-unused-vars
+	// Get all fields values
+	const payload = {};
+	for(const key in _editableFields) {
+		payload[key] = _editableFields[key]();
+	}
+
+	// Post updates
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: '/update/'+ _currSong.id,
+		data: JSON.stringify(payload)
+	});
+
 	skip();
 }
 function previous() { // eslint-disable-line no-unused-vars

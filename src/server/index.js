@@ -30,6 +30,21 @@ app.get('/get/:index', (req, res) => {
 	console.debug(req.originalUrl + ' (' + nextSongInfo.url +')');
 });
 
+app.post('/update/:songId', (req, res) => {
+	let bodyStr = '';
+	req.on('data',function(chunk){
+		bodyStr += chunk.toString();
+	});
+	req.on('end',function(){
+		const data = JSON.parse(bodyStr)
+		console.debug('\nEdition data recieved: ', data, '\n');
+	});
+});
+
+app.get('/data/outputFiles.json', (req, res) => {
+	res.send(config.outputs);
+});
+
 app.get('/scripts/:filename', (req, res) => {
 	const file = path.resolve(__dirname + '/../client/scripts') + '/' + req.params.filename;
 	res.sendFile(file);
