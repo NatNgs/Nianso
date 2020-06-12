@@ -34,7 +34,7 @@ function createPropertyLine(key, value, editionKey=null, editionType='text') {
 				const data = 'data:' + pictData.format + ';base64,' + bytesToBase64(pictData.data.data);
 				const imagebloc = $('<div></div>').addClass('propertylinePicture');
 				const image = $('<img/>').attr('src', data);
-				const imageLegend = $('<span></span>').html(pictData.type || pictData.description || '')
+				const imageLegend = $('<span></span>').html(pictData.type || pictData.description || '');
 				imagebloc.append(imageLegend);
 				imagebloc.append(image);
 				displayValue.append(imagebloc);
