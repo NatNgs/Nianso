@@ -1,0 +1,8 @@
+{
+	"serverPort": 3333,
+	"defaultSongName": ["{artists} - {title}", "{albumArtist} - {title}", "Unknown Artist - {title}"],
+	"defaultSongSubfolder": "{albumArtist}",
+	"inputs": [],
+	"outputs": [],
+	"songExts": ["mp3"]
+}
