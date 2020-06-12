@@ -1,3 +1,3 @@
 module.exports = {
-	getExt: (fileName)=>fileName.slice(fileName.lastIndexOf('.')+1),
-}
+	getExt: (fileName) => fileName.slice(fileName.lastIndexOf('.')+1),
+};

@@ -1,8 +1,8 @@
-const config = require('./server/default_config.json');
+const config = require('./default_config.json');
 
 // Get user config
 try {
-	const localConfig = require('./config.json');
+	const localConfig = require('../config.json');
 	const mergeConfs = (map1, map2) => {
 		for (const key in map2) {
 			if (!map1[key] || typeof map2[key] != 'object') {
@@ -19,4 +19,4 @@ try {
 
 module.exports = {
 	config: config
-}
+};
