@@ -1,0 +1,89 @@
+/* Main Part */
+body {
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+#serverInfo {
+	background-color: lightblue;
+	font-size: 20px;
+	text-align: center;
+	flex-basis: 100%;
+	height: 40px; /* #serverInfo.font-size*2 */
+	width: 100vw;
+}
+#userList {
+	min-width: 10vw;
+	max-width: 20vw;
+	text-align: right;
+	background-color: lightgreen;
+}
+#mainCell {
+	position: relative;
+	background-color: lightseagreen;
+	flex-grow: 1;
+	height: calc(100vh - 40px); /* 100vh - #serverInfo.height */
+}
+/* /Main Part */
+
+/* Music Selection */
+#musicSelectionPanel {
+	width: 100%;
+	height: 100%;
+	background-color: lightgreen;
+	transition: background-color linear 3s;
+	overflow: hidden auto;
+}
+#musicSelectionPanel > .cards {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+#musicSelectionPanel > .cards > .card {
+	cursor: pointer;
+	position: relative;
+	min-width: 180px;
+	max-width: 360px;
+	min-height: 180px;
+	flex: 1 0;
+}
+#musicSelectionPanel .card > img {
+	width: 100%;
+	height: auto;
+}
+#musicSelectionPanel .card > span {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 2px;
+	color: #eee;
+	background-color: #66666688;
+	font-size: 20px;
+}
+/* /Music Selection */
+
+.hidden {
+	display: none;
+}
+.sending {
+	background-color: rgb(255, 101, 101) !important;
+}
+
+.userLi {
+	width: 100%;
+	white-space: nowrap;
+	max-width: 30vw;
+}
+
+.fit {
+	position: absolute;
+	display: block;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}

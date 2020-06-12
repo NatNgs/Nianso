@@ -68,7 +68,7 @@ function SongBrowser() {
 	};
 
 	this.getSongInfoById = function(id) {
-		return _data.toSort.find((a) => a.id === id);;
+		return _data.toSort.find((a) => a.id === id);
 	};
 	const randomOrderIndexes = [];
 	this.getSongInfoByRandomOrderIndex = function(index) {

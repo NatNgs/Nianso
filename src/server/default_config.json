@@ -4,5 +4,5 @@
 	"defaultSongSubfolder": "{albumArtist}",
 	"inputs": [],
 	"outputs": [],
-	"songExts": ["mp3"]
+	"songExts": ["mp3", "mp4", "oga", "ogg", "ogv", "wav", "webm"]
 }
