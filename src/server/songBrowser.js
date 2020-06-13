@@ -124,10 +124,10 @@ function SongBrowser() {
 						// Move the file
 						fs.rename(songInfo.path, newFilePath, (err) => {
 							if(err) {
-								console.error(`Could not move ${songInfo.path} to ${newFilePath} (from ${songInfo.origin}):`, err)
+								console.error(`Could not move:\n\tfrom: ${songInfo.path}\n\tto:   ${newFilePath}:`, err)
 								return
 							}
-							console.log(`Moved ${songInfo.path}\n\tto ${newFilePath}`)
+							console.log(`Moved Successfully:\n\tfrom: ${songInfo.path}\n\tto:   ${newFilePath}\n`)
 							songInfo.path = newFilePath
 						})
 					})

@@ -34,29 +34,38 @@ Example of local configuration:
 		"C:/User/Music/Folder",
 		"D:/Music/To sort"
 	],
-	"defaultSongSubfolder": ["{albumArtist}/{album}", "{albumArtist}", "Unknown Artists"],
-	"defaultSongName": ["{artists} - {title}", "{albumArtist} - {title}", "Unknown Artist - {title}", "{artists} - Unknown", "{albumArtist} - Unknown", "Unknown Artist - Unknown"],
+	"defaultSongSubfolder": [
+		"{albumArtist}/{album}",
+		"{albumArtist}",
+		"Unknown Artists"
+	],
+	"defaultSongName": [
+		"{artists} - {title}",
+		"{albumArtist} - {title}",
+		"Unknown Artist - {title}",
+		"{artists} - Unknown",
+		"{albumArtist} - Unknown",
+		"Unknown Artist - Unknown"
+	],
 	"outputs": [{
 		"name": "Instrumental",
-		"path": "D:/Music/Sorted/Instrumental"
+		"path": "C:/User/Music/Instrumental"
 	}, {
 		"name": "Songs",
 		"path": "D:/Music/Sorted/Songs"
 	}, {
 		"name": "Game Soundtrack",
 		"path": "D:/Music/Sorted/Soundtrack/Games",
-		"defaultSongSubfolder": ["{album}", "Unknown"]
 	}, {
 		"name": "Movie Soundtrack",
 		"path": "D:/Music/Sorted/Soundtrack/Movies",
-		"defaultSongSubfolder": ["{album}", "Unknown"]
 	}]
 }
 ```
 
 ## Launch server
 
-Will open the server on your machine IP, port 3333 by default (or will use the port you defined in configuration).
+Will open the server on your machine IP, port **3333** by default (will use the port you defined in configuration).
 
 ```sh
 # cd Nianso
@@ -67,7 +76,7 @@ npm start
 
 Open a browser to the page: `127.0.0.1:<server port>/`
 
-For example if the server runs in local machine on default port, connect to `127.0.0.1:3042/` on any browser.
+For example if the server runs in local machine on default port, connect to `127.0.0.1:3333/` on any browser.
 
 ### Browser Compatibility:
 
