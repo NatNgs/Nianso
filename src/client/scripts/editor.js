@@ -6,35 +6,22 @@ function SongPage(data) { // eslint-disable-line no-unused-vars
 	const _editableFields = {}
 	const createPropertyLine = function(key, value, editionKey=null, editionType='text') {
 		let displayValue
-		if(editionKey) {
-			if(editionType === 'textarea') {
-				displayValue = $('<textarea></textarea>').val(value.trim())
-				_editableFields[editionKey] = (() => displayValue.val().trim())
-			} else if(editionType === 'number') {
-				displayValue = $('<input type="number"/>').val(value)
-				_editableFields[editionKey] = (() => +displayValue.val())
-			} else {
-				displayValue = $(`<input type="${editionType}"/>`).val(value.trim())
-				_editableFields[editionKey] = (() => displayValue.val().trim())
+		if(editionType === 'pictures') {
+			displayValue = $('<div></div>')
+			for(const pictData of value) {
+				if(!pictData.data || pictData.data.type !== 'Buffer') continue
+
+				// [{"format":"image/jpeg","type":"Cover (front)","description":"","data":{"type":"Buffer","data":[255,216,255,224,0,16,74,70,73,70
+				const data = 'data:' + pictData.format + ';base64,' + bytesToBase64(pictData.data.data)
+				const imagebloc = $('<div></div>').addClass('propertylinePicture')
+				const image = $('<img/>').attr('src', data)
+				const imageLegend = $('<span></span>').html(pictData.type || pictData.description || '')
+				imagebloc.append(imageLegend)
+				imagebloc.append(image)
+				displayValue.append(imagebloc)
 			}
 		} else {
-			if(editionType === 'pictures') {
-				displayValue = $('<div></div>')
-				for(const pictData of value) {
-					if(!pictData.data || pictData.data.type !== 'Buffer') continue
-
-					// [{"format":"image/jpeg","type":"Cover (front)","description":"","data":{"type":"Buffer","data":[255,216,255,224,0,16,74,70,73,70
-					const data = 'data:' + pictData.format + ';base64,' + bytesToBase64(pictData.data.data)
-					const imagebloc = $('<div></div>').addClass('propertylinePicture')
-					const image = $('<img/>').attr('src', data)
-					const imageLegend = $('<span></span>').html(pictData.type || pictData.description || '')
-					imagebloc.append(imageLegend)
-					imagebloc.append(image)
-					displayValue.append(imagebloc)
-				}
-			} else {
-				displayValue = $('<code></code>').html(value)
-			}
+			displayValue = $('<code></code>').html(value)
 		}
 		const propLine = $('<div></div>').addClass('dataline')
 		propLine.append($('<span></span>').addClass('datalineKey').html(key))
