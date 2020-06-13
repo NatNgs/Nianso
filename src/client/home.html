@@ -4,24 +4,32 @@
 	<meta charset="utf-8">
 	<title>Nianso</title>
 
+	<!-- External -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.15-rc1/mediaelementplayer.min.css" />
-	<link rel="stylesheet" href="styles/main.css" />
-
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.15-rc1/mediaelement-and-player.min.js"></script>
+
+	<!-- Internal -->
+	<link rel="stylesheet" href="styles/main.css" />
+	<link rel="stylesheet" href="styles/folderSelect.css" />
+	<link rel="stylesheet" href="styles/nav.css" />
+	<script src="scripts/folderSelect.js"></script>
 	<script src="scripts/main.js"></script>
 	<script src="scripts/base64.js"></script>
+	<script src="scripts/editor.js"></script>
 </head>
 <body>
 	<audio id="mediaplayer" controls="show" width="100%"></audio>
 
-	<div id="info_div"></div>
+	<div id="info_div"><!-- Dynamic --></div>
+
+	<div id="move_div"><!-- Dynamic --></div>
 
 	<div id="nav_div">
 		<button id="navPrev" onclick="previous()">Previous</button>
-		<button id="navNext" onclick="next()">Ok & Next</button>
-		<button id="navSkip" onclick="skip()">Cancel & Skip</button>
-		<label id="navAuto_label"><input type="checkbox" id="navAuto" checked="checked"/>Auto</label>
+		<button id="navNext" onclick="applyChanges(); skip();">Update & Launch next</button>
+		<button id="navSkip" onclick="skip()">Ignore & Skip</button>
+		<label id="navAuto_label"><input type="checkbox" id="navAuto" checked="checked"/><span>Auto Skip at end of song</span></label>
 	</div>
 </body>
 </html>

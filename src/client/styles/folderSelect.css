@@ -1,0 +1,25 @@
+#move_div {
+	display: flex;
+	flex-direction: row;
+	color: white;
+	margin: 10px;
+}
+#move_div * {
+	margin-right: 1px;
+	margin-left: 1px;
+}
+
+#subfolderSelector_div {
+	flex: 1;
+	display: flex;
+}
+#subfolderSelector {
+	flex: 1;
+}
+#fileNameSelector_div {
+	flex: 1;
+	display: flex;
+}
+#fileNameSelector {
+	flex: 1;
+}

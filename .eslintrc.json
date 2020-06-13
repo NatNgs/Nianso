@@ -13,19 +13,19 @@
 	},
 	"rules": {
 		/* https://eslint.org/docs/rules/ */
-		"arrow-parens": ["error", "always"],
-		"arrow-spacing": ["error", {"after": true, "before": true}],
+		"arrow-parens": ["warn", "always"],
+		"arrow-spacing": ["warn", {"after": true, "before": true}],
 		"eol-last": ["error", "always"],
 		"indent": ["error", "tab", {"SwitchCase": 1}],
 		"linebreak-style": ["error", "unix"],
-		"no-empty": ["error", { "allowEmptyCatch": true }],
-		"no-unused-vars": ["error", {"args": "none", "vars": "local" }],
+		"no-empty": ["warn", { "allowEmptyCatch": true }],
+		"no-unused-vars": ["warn", {"args": "none", "vars": "local" }],
 		"prefer-const": ["error", {
 			"destructuring": "all",
 			"ignoreReadBeforeAssign": true
 		}],
-		"quotes": ["error", "single"],
-		"semi": ["error", "always"],
+		"quotes": ["warn", "single"],
+		"semi": ["warn", "never"],
 		"space-in-parens": ["error", "never"],
 		"spaced-comment": ["error", "always"]
 	},

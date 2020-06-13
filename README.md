@@ -34,8 +34,8 @@ Example of local configuration:
 		"C:/User/Music/Folder",
 		"D:/Music/To sort"
 	],
-	"defaultSongName": ["{artists} - {title}", "{albumArtist} - {title}", "Unknown Artist - {title}"],
-	"defaultSongSubfolder": "{albumArtist}",
+	"defaultSongSubfolder": ["{albumArtist}/{album}", "{albumArtist}", "Unknown Artists"],
+	"defaultSongName": ["{artists} - {title}", "{albumArtist} - {title}", "Unknown Artist - {title}", "{artists} - Unknown", "{albumArtist} - Unknown", "Unknown Artist - Unknown"],
 	"outputs": [{
 		"name": "Instrumental",
 		"path": "D:/Music/Sorted/Instrumental"
@@ -45,11 +45,11 @@ Example of local configuration:
 	}, {
 		"name": "Game Soundtrack",
 		"path": "D:/Music/Sorted/Soundtrack/Games",
-		"defaultSongSubfolder": "{album}"
+		"defaultSongSubfolder": ["{album}", "Unknown"]
 	}, {
 		"name": "Movie Soundtrack",
 		"path": "D:/Music/Sorted/Soundtrack/Movies",
-		"defaultSongSubfolder": "{album}"
+		"defaultSongSubfolder": ["{album}", "Unknown"]
 	}]
 }
 ```

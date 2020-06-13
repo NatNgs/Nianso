@@ -1,30 +1,31 @@
 body {
-	width: 100vw;
-	height: 100vh;
+	max-width: 100vw;
+	min-height: 100vh;
 
 	margin: 0;
 	padding: 0;
-	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
 
 	display: flex;
 	flex-direction: column;
+
+	background-color: black;
 }
 
 /* Song data */
 #info_div {
 	flex: 1;
 	padding: 5px;
-	overflow-y: scroll;
-	overflow-x: hidden;
 }
 .dataline {
 	display: flex;
 	width: 100%;
-	background-color: #DDDDDD;
+	background-color: #666;
 	padding: 2px;
 }
 .dataline:nth-child(2n) {
-	background-color: #BBBBBB;
+	background-color: #444;
 }
 .datalineKey {
 	margin-right: 1em;
@@ -54,40 +55,11 @@ body {
 	text-align: center;
 }
 
-
-/* Nav */
-#nav_div {
-	position: relative;
-	width: 100%;
-	height: 5vh;
-	margin-bottom: 5px;
+input, textarea, select {
+	border: 1px solid white;
+	padding: 2px;
+	background-color: #BBDDDD;
 }
-#navPrev {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	width: 20%; /* 0%-20% */
-}
-#navNext {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 20%;
-	width: 40%; /* 20%-60% */
-}
-#navSkip {
-	position: absolute;
-	top: 0;
-	bottom: 33%;
-	left: 60%;
-	width: 40%; /* 60%-100% */
-}
-#navAuto_label {
-	position: absolute;
-	height: 33%;
-	bottom: 0;
-	left: 60%;
-	width: 40%; /* 60%-100% */
-	text-align: center;
+textarea {
+	resize: vertical;
 }

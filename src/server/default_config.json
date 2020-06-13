@@ -1,7 +1,20 @@
 {
 	"serverPort": 3333,
-	"defaultSongName": ["{artists} - {title}", "{albumArtist} - {title}", "Unknown Artist - {title}"],
-	"defaultSongSubfolder": "{albumArtist}",
+	"defaultSongSubfolder": [
+		"{albumArtist}/{album}",
+		"{artist}/{album}",
+		"{albumArtist}",
+		"{artist}",
+		"Unknown Artists"
+	],
+	"defaultSongName": [
+		"{artists} - {title}",
+		"{albumartist} - {title}",
+		"Unknown Artist - {title}",
+		"{artists} - Unknown",
+		"{albumartist} - Unknown",
+		"Unknown Artist - Unknown"
+	],
 	"inputs": [],
 	"outputs": [],
 	"songExts": ["mp3", "mp4", "oga", "ogg", "ogv", "wav", "webm"]
