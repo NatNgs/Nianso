@@ -13,6 +13,23 @@ body {
 	background-color: black;
 }
 
+/* Player */
+#player_div {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+#mediaplayer, #mep_0 {
+	flex: 1;
+}
+#trackNb {
+	color: white;
+	padding-right: 1em;
+}
+.mejs__time-float {
+	margin-bottom: 0;
+}
+
 /* Song data */
 #info_div {
 	flex: 1;

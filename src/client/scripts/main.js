@@ -19,10 +19,10 @@ $(document).ready(() => {
 			_mediaplayer = player
 			player.addEventListener('ended', () => {
 				if($('#navSkipAuto').is(':checked')) {
-					skip()
+					skip(true)
 				} else if($('#navSortAuto').is(':checked')) {
 					applyChanges(true)
-					skip()
+					skip(true)
 				}
 			})
 		}
@@ -42,19 +42,20 @@ $(document).ready(() => {
 })
 
 let currSongIndex = -1
-function getSong(index) {
+function getSong(index, isAutoMode=false) {
 	$.ajax({
 		type: 'GET',
 		dataType: 'json',
 		url: `/get/${index}`,
 		success: (data) => {
-			currSongIndex = data.orderIndex,
+			currSongIndex = data.orderIndex
 			_mediaplayer.pause()
 			_mediaplayer.setSrc(data.url)
 			_mediaplayer.load()
 			_currSong = new SongPage(data)
 			$('#info_div').empty().append(_currSong.div)
-			_folderSelect.setSongData(data)
+			$('#trackNb').html(data.orderIndex + ' / ' + data.orderIndexOver)
+			_folderSelect.setSongData(data, isAutoMode)
 			_mediaplayer.play()
 		}
 	})
@@ -63,8 +64,8 @@ function getSong(index) {
 //
 // Exported functions (within HTML)
 
-function skip() { // eslint-disable-line no-unused-vars
-	getSong('next')
+function skip(isAutoMode = false) { // eslint-disable-line no-unused-vars
+	getSong('next', isAutoMode)
 }
 function applyChanges(isAutoMode = false) { // eslint-disable-line no-unused-vars
 	const payload = _currSong.getEditedValues()

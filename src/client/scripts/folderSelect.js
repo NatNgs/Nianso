@@ -1,3 +1,5 @@
+const fileNameRestrictedChars = /[./<>:"\\|?*]+/g
+const folderNameRestrictedChars = /[<>:"\\|?*]+/g
 function FolderSelect() { // eslint-disable-line no-unused-vars
 	let _div
 	let _conf
@@ -36,7 +38,7 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 		}
 	}
 
-	this.setSongData = function(data) {
+	this.setSongData = function(data, isAutoEnabled) {
 		// If already sorted, automatically select output folder where it is sorted
 		_outputSelector.val('')
 		let defaultOutputValue = null
@@ -63,6 +65,10 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 			)
 			_fileNameSelector.val(subName)
 		} else {
+			if(isAutoEnabled) {
+				_outputSelector.val(_conf.autoOutput)
+			}
+
 			// Set subfolder value
 			_subfolderSelector.val(metadataTemplateStr(_conf.defaultSongSubfolder, data) || '')
 
@@ -73,14 +79,19 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 	}
 
 	this.getSelectedValues = function(isAutoMode) {
-		if(isAutoMode && _conf.autoOutput && !_outputSelector.val()) {
-			_outputSelector.val(_conf.autoOutput)
+		let outputSelection = _outputSelector.val().trim()
+		const folderNameSelection = _subfolderSelector.val().trim()
+		const fileNameSelection = _fileNameSelector.val().trim().replace(fileNameRestrictedChars, '_')
+		if(isAutoMode && _conf.autoOutput && !outputSelection) {
+			outputSelection = _conf.autoOutput
 		}
-		if(!_outputSelector.val() || !_fileNameSelector.val()) {
+		if(!outputSelection || !fileNameSelection) {
 			return null
 		}
 
-		return _outputSelector.val() + ('/' + _subfolderSelector.val() + '/').replace(/\/\/+/g, '/') + _fileNameSelector.val() + _fileNameExt.html()
+		return (`${outputSelection}/${folderNameSelection}/${fileNameSelection}${_fileNameExt.html()}`
+			.replace(folderNameRestrictedChars, '_')
+			.replace(/\/\/+/g, '/'))
 	}
 }
 

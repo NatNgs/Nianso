@@ -53,6 +53,39 @@ function SongBrowser() {
 		})
 	}
 
+	const moveFile = function(oldPath, newPath, onSuccess) {
+		oldPath = path.resolve(oldPath)
+		newPath = path.resolve(newPath)
+		if(oldPath === newPath) return
+
+		// Get folder name, create it if needed
+		const newFolder = path.dirname(newPath)
+
+		fs.mkdir(newFolder, {recursive: true}, (err) => {
+			// Check if newFile already exists
+			fs.readdir(newFolder, (err, files) => {
+				if(files.indexOf(newPath) >= 0) {
+					let index = 2
+					const ext = utils.getExt(newPath)
+					newPath = newPath.slice(0, newPath.length - ext.length)
+					while (files.indexOf(`${newPath} - ${index}${ext}`) >= 0) {
+						index++
+					}
+					newPath = `${newPath} - ${index}${ext}`
+				}
+				// Move the file
+				fs.rename(oldPath, newPath, (err) => {
+					if(err) {
+						console.error(`Could not move:\n\tfrom: ${oldPath}\n\tto:   ${newPath}:`, err)
+						return
+					}
+					console.log(`Moved Successfully:\n\tfrom: ${oldPath}\n\tto:   ${newPath}\n`)
+					onSuccess(newPath)
+				})
+			})
+		})
+	}
+
 	//
 	// Public
 
@@ -105,7 +138,9 @@ function SongBrowser() {
 
 	this.applyMoveAndUpdate = function(songId, updateData) {
 		const songInfo = this.getSongInfoById(songId)
-		if(updateData.path && songInfo) {
+		if(updateData.path && songInfo && !songInfo.updating) {
+			songInfo.updating = true // antispam
+
 			// Check and replace output name with output path in requested new path
 			const newPath = updateData.path.split('/')
 			const outputName = newPath.shift()
@@ -113,30 +148,13 @@ function SongBrowser() {
 			if(pathBase && pathBase.path) {
 				// Prepare full new file path
 				newPath.unshift(pathBase.path)
-				const newFilePath = path.resolve(...newPath)
-				// Check if is changed
-				if(newFilePath !== songInfo.path) {
-					// Get folder name, create it if needed
-					const fileName = newPath.pop()
-					const folder = path.resolve(...newPath)
-					newPath.push(fileName)
-					fs.mkdir(folder, {recursive: true}, (err) => {
-						// Move the file
-						fs.rename(songInfo.path, newFilePath, (err) => {
-							if(err) {
-								console.error(`Could not move:\n\tfrom: ${songInfo.path}\n\tto:   ${newFilePath}:`, err)
-								return
-							}
-							console.log(`Moved Successfully:\n\tfrom: ${songInfo.path}\n\tto:   ${newFilePath}\n`)
-							songInfo.path = newFilePath
-						})
-					})
-				}
+				moveFile(songInfo.path, newPath.join('/'), (newFilePath) => {
+					songInfo.path = newFilePath
+					delete songInfo.updating
+				})
 			} else {
 				console.warn('Not found output path with name: ', outputName)
 			}
-		} else {
-			console.info('Not found song info or path is null', songId, updateData.path)
 		}
 	}
 }
