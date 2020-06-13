@@ -127,7 +127,7 @@ function SongBrowser() {
 								console.error(`Could not move ${songInfo.path} to ${newFilePath} (from ${songInfo.origin}):`, err)
 								return
 							}
-							console.log(`Moved ${songInfo.path} to ${newFilePath} (from ${songInfo.origin})`)
+							console.log(`Moved ${songInfo.path}\n\tto ${newFilePath}`)
 							songInfo.path = newFilePath
 						})
 					})

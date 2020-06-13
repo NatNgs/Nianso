@@ -72,8 +72,13 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 		_fileNameExt.html(data.origin.slice(data.origin.lastIndexOf('.')))
 	}
 
-	this.getSelectedValues = function(data) {
-		if(!_outputSelector.val() || !_fileNameSelector.val()) return null
+	this.getSelectedValues = function(isAutoMode) {
+		if(isAutoMode && _conf.autoOutput && !_outputSelector.val()) {
+			_outputSelector.val(_conf.autoOutput)
+		}
+		if(!_outputSelector.val() || !_fileNameSelector.val()) {
+			return null
+		}
 
 		return _outputSelector.val() + ('/' + _subfolderSelector.val() + '/').replace(/\/\/+/g, '/') + _fileNameSelector.val() + _fileNameExt.html()
 	}

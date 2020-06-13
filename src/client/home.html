@@ -25,11 +25,13 @@
 
 	<div id="move_div"><!-- Dynamic --></div>
 
-	<div id="nav_div">
+	<div id="nav_div" class="noselectRec">
 		<button id="navPrev" onclick="previous()">Previous</button>
 		<button id="navNext" onclick="applyChanges(); skip();">Update & Launch next</button>
+		<label id="navSortAuto_label"><input type="checkbox" id="navSortAuto"/><div><span>Auto<br/>Update</span></div></label>
+
 		<button id="navSkip" onclick="skip()">Ignore & Skip</button>
-		<label id="navAuto_label"><input type="checkbox" id="navAuto" checked="checked"/><span>Auto Skip at end of song</span></label>
+		<label id="navSkipAuto_label"><input type="checkbox" id="navSkipAuto" checked="checked"/><div><span>Auto<br/>Skip</span></div></label>
 	</div>
 </body>
 </html>

@@ -42,7 +42,6 @@ app.post('/update/:songId', (req, res) => {
 	})
 	req.on('end', () => {
 		const data = JSON.parse(bodyStr)
-		console.debug('\nEdition data recieved: ', data, '\n')
 		songBrowser.applyMoveAndUpdate(req.params.songId, data)
 		res.end()
 	})

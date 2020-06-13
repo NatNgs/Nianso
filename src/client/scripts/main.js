@@ -4,6 +4,13 @@ let _mediaplayer
 let _currSong = null
 
 $(document).ready(() => {
+	$('#navSortAuto').click(() => {
+		$('#navSkipAuto').prop('checked', false)
+	})
+	$('#navSkipAuto').click(() => {
+		$('#navSortAuto').prop('checked', false)
+	})
+
 	$('#mediaplayer').mediaelementplayer({
 		alwaysShowControls: true,
 		features: ['playpause','volume','progress'],
@@ -11,7 +18,10 @@ $(document).ready(() => {
 		success: (player, container) => {
 			_mediaplayer = player
 			player.addEventListener('ended', () => {
-				if($('#navAuto').is(':checked')) {
+				if($('#navSkipAuto').is(':checked')) {
+					skip()
+				} else if($('#navSortAuto').is(':checked')) {
+					applyChanges(true)
 					skip()
 				}
 			})
@@ -56,9 +66,9 @@ function getSong(index) {
 function skip() { // eslint-disable-line no-unused-vars
 	getSong('next')
 }
-function applyChanges() { // eslint-disable-line no-unused-vars
+function applyChanges(isAutoMode = false) { // eslint-disable-line no-unused-vars
 	const payload = _currSong.getEditedValues()
-	payload['path'] = _folderSelect.getSelectedValues()
+	payload['path'] = _folderSelect.getSelectedValues(isAutoMode)
 	// Post updates
 	$.ajax({
 		type: 'POST',
