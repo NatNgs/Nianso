@@ -1,5 +1,10 @@
 /* global bytesToBase64 */
-const spetialMetadataCommonKeys = ['artist', 'artists', 'title', 'subtitle', 'album', 'albumartist', 'rating', 'comment', 'picture']
+const spetialMetadataCommonKeys = [
+	'artist', 'artists',
+	'title', 'subtitle',
+	'album', 'albumartist',
+	'rating', 'comment', 'picture', 'duration'
+]
 
 function SongPage(data) { // eslint-disable-line no-unused-vars
 	const container = $('<div></div>')
@@ -99,6 +104,18 @@ function SongPage(data) { // eslint-disable-line no-unused-vars
 
 		container.append('<br/>')
 
+		// Duration
+		if(data.metadata.format.duration) {
+			const hours = String((data.metadata.format.duration/3600) |0).padStart(2, '0')
+			const mins = String(((data.metadata.format.duration % 3600)/60) |0).padStart(2, '0')
+			const secs = String((data.metadata.format.duration % 60) |0).padStart(2, '0')
+			const ms = String(((data.metadata.format.duration - (data.metadata.format.duration |0))*1000) |0).padStart(3, '0')
+			container.append(createPropertyLine(
+				'Duration',
+				`${hours}:${mins}:${secs}.${ms} (${data.metadata.format.duration.toFixed(3)}s)`
+			))
+		}
+
 		// Pictures
 		if(data.metadata.common.picture) {
 			container.append(createPropertyLine('Pictures', data.metadata.common.picture, null, 'pictures'))
@@ -112,6 +129,7 @@ function SongPage(data) { // eslint-disable-line no-unused-vars
 
 		// Format data
 		for(const key in data.metadata.format) {
+			if(spetialMetadataCommonKeys.indexOf(key) >= 0) continue
 			container.append(createPropertyLine(key, JSON.stringify(data.metadata.format[key])))
 		}
 	}

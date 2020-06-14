@@ -58,21 +58,23 @@ function SongBrowser() {
 		newPath = path.resolve(newPath)
 		if(oldPath === newPath) return
 
+		const ext = '.' + utils.getExt(newPath).toLowerCase()
+		const lowerFileName = newPath.toLowerCase().slice(newPath.lastIndexOf(path.sep)+1, -ext.length)
+
 		// Get folder name, create it if needed
 		const newFolder = path.dirname(newPath)
-
 		fs.mkdir(newFolder, {recursive: true}, (err) => {
 			// Check if newFile already exists
 			fs.readdir(newFolder, (err, files) => {
-				if(files.indexOf(newPath) >= 0) {
+				files = files.map((file) => file.toLowerCase())
+				if(files.indexOf(lowerFileName + ext) >= 0) {
 					let index = 2
-					const ext = utils.getExt(newPath)
-					newPath = newPath.slice(0, newPath.length - ext.length)
-					while (files.indexOf(`${newPath} - ${index}${ext}`) >= 0) {
+					while (files.indexOf(`${lowerFileName} - ${index}${ext}`) >= 0) {
 						index++
 					}
-					newPath = `${newPath} - ${index}${ext}`
+					newPath = `${newPath.slice(0, -ext.length)} - ${index}${ext}`
 				}
+
 				// Move the file
 				fs.rename(oldPath, newPath, (err) => {
 					if(err) {

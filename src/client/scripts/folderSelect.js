@@ -1,4 +1,4 @@
-const fileNameRestrictedChars = /[./<>:"\\|?*]+/g
+const fileNameRestrictedChars = /[/<>:"\\|?*]+/g
 const folderNameRestrictedChars = /[<>:"\\|?*]+/g
 function FolderSelect() { // eslint-disable-line no-unused-vars
 	let _div
@@ -39,11 +39,13 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 	}
 
 	this.setSongData = function(data, isAutoEnabled) {
+		data.path = data.path.replace(/[\\/]+/, '/')
+
 		// If already sorted, automatically select output folder where it is sorted
 		_outputSelector.val('')
 		let defaultOutputValue = null
 		for(const outConf of _conf.outputs) {
-			if(data.path.startsWith(outConf.path)) {
+			if(data.path.startsWith(outConf.path.replace(/[\\/]+/, '/'))) {
 				_outputSelector.val(outConf.name)
 				defaultOutputValue = outConf
 				break
@@ -51,6 +53,7 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 		}
 
 		if(defaultOutputValue) {
+			defaultOutputValue.path = defaultOutputValue.path.replace(/[\\/]+/, '/')
 			// Set subfolder value
 			const subFolder = data.path.slice(
 				defaultOutputValue.path.length,
@@ -70,10 +73,10 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 			}
 
 			// Set subfolder value
-			_subfolderSelector.val(metadataTemplateStr(_conf.defaultSongSubfolder, data) || '')
+			_subfolderSelector.val((metadataTemplateStr(_conf.defaultSongSubfolder, data) || '').replace(folderNameRestrictedChars, ''))
 
 			// Set filename value
-			_fileNameSelector.val(metadataTemplateStr(_conf.defaultSongName, data) || '')
+			_fileNameSelector.val((metadataTemplateStr(_conf.defaultSongName, data) || '').replace(fileNameRestrictedChars, ''))
 		}
 		_fileNameExt.html(data.origin.slice(data.origin.lastIndexOf('.')))
 	}
@@ -81,7 +84,7 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 	this.getSelectedValues = function(isAutoMode) {
 		let outputSelection = _outputSelector.val().trim()
 		const folderNameSelection = _subfolderSelector.val().trim()
-		const fileNameSelection = _fileNameSelector.val().trim().replace(fileNameRestrictedChars, '_')
+		const fileNameSelection = _fileNameSelector.val().trim().replace(fileNameRestrictedChars, '')
 		if(isAutoMode && _conf.autoOutput && !outputSelection) {
 			outputSelection = _conf.autoOutput
 		}
@@ -90,7 +93,7 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 		}
 
 		return (`${outputSelection}/${folderNameSelection}/${fileNameSelection}${_fileNameExt.html()}`
-			.replace(folderNameRestrictedChars, '_')
+			.replace(folderNameRestrictedChars, '')
 			.replace(/\/\/+/g, '/'))
 	}
 }

@@ -19,10 +19,10 @@ $(document).ready(() => {
 			_mediaplayer = player
 			player.addEventListener('ended', () => {
 				if($('#navSkipAuto').is(':checked')) {
-					skip(true)
+					skip()
 				} else if($('#navSortAuto').is(':checked')) {
 					applyChanges(true)
-					skip(true)
+					skip()
 				}
 			})
 		}
@@ -64,8 +64,8 @@ function getSong(index, isAutoMode=false) {
 //
 // Exported functions (within HTML)
 
-function skip(isAutoMode = false) { // eslint-disable-line no-unused-vars
-	getSong('next', isAutoMode)
+function skip() { // eslint-disable-line no-unused-vars
+	getSong('next', $('#navSortAuto').is(':checked'))
 }
 function applyChanges(isAutoMode = false) { // eslint-disable-line no-unused-vars
 	const payload = _currSong.getEditedValues()
