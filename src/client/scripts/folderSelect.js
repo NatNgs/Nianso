@@ -1,5 +1,5 @@
-const fileNameRestrictedChars = /[/<>:"\\|?*]+/g
-const folderNameRestrictedChars = /[<>:"\\|?*]+/g
+const fileNameRestrictedChars = /[/.<>:"\\|?*]+/g
+const folderNameRestrictedChars = /[.<>:"\\|?*]+/g
 function FolderSelect() { // eslint-disable-line no-unused-vars
 	let _div
 	let _conf
