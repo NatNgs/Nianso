@@ -55,7 +55,7 @@ function getSong(index, isAutoMode=false) {
 			_currSong = new SongPage(data)
 			$('#info_div').empty().append(_currSong.div)
 			$('#trackNb').html(data.orderIndex + ' / ' + data.orderIndexOver)
-			_folderSelect.setSongData(data, isAutoMode)
+			_folderSelect.setSongData(data, _currSong.getEditedValues)
 			_mediaplayer.play()
 		}
 	})

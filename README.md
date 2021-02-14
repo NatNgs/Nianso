@@ -56,12 +56,32 @@ Example of local configuration:
 	}, {
 		"name": "Game Soundtrack",
 		"path": "D:/Music/Sorted/Soundtrack/Games",
+		"songName": [
+			"{albumArtist} - {title}",
+			"{title}",
+			"{albumArtist} - Unknown",
+			"Unknown"
+		]
 	}, {
 		"name": "Movie Soundtrack",
 		"path": "D:/Music/Sorted/Soundtrack/Movies",
+		"songSubfolder": [
+			"{album}",
+			"Unknown Movie"
+		]
 	}]
 }
 ```
+
+### Names Templates
+
+Currently supported templates for "songName" and "songSubfolder" values:
+- `{title}`: "This is my song"
+- `{subtitle}`: "Live version"
+- `{artists}`: "John Doe, Jane Doe"
+- `{artist}`: "John Doe"
+- `{album}`: "The Album Name"
+- `{albumArtist}`: "John Doe"
 
 ## Launch server
 

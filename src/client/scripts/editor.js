@@ -1,9 +1,9 @@
 /* global bytesToBase64 */
-const spetialMetadataCommonKeys = [
+const specialMetadataCommonKeys = [
 	'artist', 'artists',
 	'title', 'subtitle',
 	'album', 'albumartist',
-	'rating', 'comment', 'picture', 'duration'
+	'genre', 'year', 'rating', 'comment', 'picture', 'duration'
 ]
 
 function SongPage(data) { // eslint-disable-line no-unused-vars
@@ -13,11 +13,17 @@ function SongPage(data) { // eslint-disable-line no-unused-vars
 		let displayValue
 		if(editionKey) {
 			if(editionType === 'textarea') {
-				displayValue = $('<textarea></textarea>').val(value.trim())
+				displayValue = $('<textarea></textarea>').val(('' + value).trim())
+				_editableFields[editionKey] = (() => displayValue.val().trim())
+			} else if(editionType === 'text') {
+				displayValue = $('<input type="text"/>').val(('' + value).trim())
 				_editableFields[editionKey] = (() => displayValue.val().trim())
 			} else if(editionType === 'number') {
-				displayValue = $('<input type="number"/>').val(value)
+				displayValue = $('<input type="number" class="dataNum"/>').val(+value)
 				_editableFields[editionKey] = (() => +displayValue.val())
+			} else if(editionType === 'list') {
+				displayValue = $('<input type="text" class="dataList"/>').val((value || []).join(', '))
+				_editableFields[editionKey] = (() => displayValue.val().split(/[,;]+/).map((e) => e.trim()).filter((e) => e))
 			} else {
 				displayValue = $(`<input type="${editionType}"/>`).val(value.trim())
 				_editableFields[editionKey] = (() => displayValue.val().trim())
@@ -66,41 +72,33 @@ function SongPage(data) { // eslint-disable-line no-unused-vars
 		const artists = data.metadata.common.artists || []
 		if(artist1 && artists.indexOf(artist1) < 0)
 			artists.push(data.metadata.common.artist)
-		container.append(createPropertyLine('Artists', artists.join(', '), 'common/artists'))
+		container.append(createPropertyLine('Artists', artists, 'common/artists', 'list'))
 
 		// Title
 		container.append(createPropertyLine('Title', data.metadata.common.title || '', 'common/title'))
 		container.append(createPropertyLine('Subtitle', data.metadata.common.subtitle || '', 'common/subtitle'))
+		container.append(createPropertyLine('Genres', data.metadata.common.genre, 'common/genre', 'list'))
 
 		container.append('<br/>')
 
 		// Album
 		container.append(createPropertyLine('Album', data.metadata.common.album || '', 'common/album'))
 		container.append(createPropertyLine(
-			'Artist',
+			'Album Artist',
 			data.metadata.common.albumartist || (artists.length && artists[0]) || '',
 			'common/albumartist'
 		))
 
 		container.append('<br/>')
 
-		// Rating
-		let rating = null
-		if(data.metadata.common.rating) {
-			for(const r of data.metadata.common.rating) {
-				if(r.source === 'nianso') {
-					rating = r.rating
-					break
-				}
-				if(r.source === 'Windows Media Player 9 Series') {
-					rating = r.rating * 20
-				}
-			}
-		}
-		container.append(createPropertyLine('Rating', rating || '', 'common/rating', 'number'))
-
-		// Comment
-		container.append(createPropertyLine('Comment', (data.metadata.common.comment || []).join('\n').replace(/\r?\n\r?/g, '\n'), 'common/comment', 'textarea'))
+		// Other editable data
+		container.append(createPropertyLine('Year', data.metadata.common.year || '', 'common/year'))
+		container.append(createPropertyLine('Language', data.metadata.common.language || '', 'common/language'))
+		container.append(createPropertyLine('Composer', data.metadata.common.composer || '', 'common/composer'))
+		container.append(createPropertyLine('Conductor', data.metadata.common.conductor || '', 'common/conductor'))
+		container.append(createPropertyLine('Publisher', data.metadata.common.publisher || '', 'common/publisher'))
+		container.append(createPropertyLine('EncodedBy', data.metadata.common.encodedBy || '', 'common/encodedBy'))
+		container.append(createPropertyLine('Copyright', data.metadata.common.copyright || '', 'common/copyright'))
 
 		container.append('<br/>')
 
@@ -121,15 +119,30 @@ function SongPage(data) { // eslint-disable-line no-unused-vars
 			container.append(createPropertyLine('Pictures', data.metadata.common.picture, null, 'pictures'))
 		}
 
+		// Rating
+		let rating = null
+		if(data.metadata.common.rating) {
+			for(const r of data.metadata.common.rating) {
+				if(r.source === 'nianso') {
+					rating = r.rating
+					break
+				}
+				if(r.source === 'Windows Media Player 9 Series') {
+					rating = r.rating * 20 | 0
+				}
+			}
+		}
+		container.append(createPropertyLine('Rating', rating || ''))
+
 		// Common data
 		for(const key in data.metadata.common) {
-			if(spetialMetadataCommonKeys.indexOf(key) >= 0) continue
+			if(specialMetadataCommonKeys.indexOf(key) >= 0) continue
 			container.append(createPropertyLine(key, JSON.stringify(data.metadata.common[key])))
 		}
 
 		// Format data
 		for(const key in data.metadata.format) {
-			if(spetialMetadataCommonKeys.indexOf(key) >= 0) continue
+			if(specialMetadataCommonKeys.indexOf(key) >= 0) continue
 			container.append(createPropertyLine(key, JSON.stringify(data.metadata.format[key])))
 		}
 	}
@@ -141,8 +154,16 @@ function SongPage(data) { // eslint-disable-line no-unused-vars
 		this[key] = data[key]
 	}
 	this.div = container
-	this.getEditedValues = function() {
+	this.getEditedValues = function(withUnedited=false) {
 		const values = {}
+		if(withUnedited) {
+			for(const key in data.metadata.common) {
+				values['common/'+key] = data.metadata.common[key]
+			}
+			for(const key in data.metadata.common) {
+				values['format/'+key] = data.metadata.format[key]
+			}
+		}
 		for(const key in _editableFields) {
 			values[key] = _editableFields[key]()
 		}

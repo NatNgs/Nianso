@@ -73,6 +73,12 @@ app.get('/audio/:filename([0-9a-z]+).:ext', (req, res, nxt) => {
 	nxt()
 })
 
+app.get('/favicon.ico', (req, res) => {
+	const file = path.resolve(__dirname + '/../../Nianso.ico')
+	console.debug(req.originalUrl, '('+ file + ')')
+	res.sendFile(file)
+})
+
 app.get('*', (req, res) => {
 	console.debug(req.originalUrl, '(404: Not Found)')
 	res.status(404).send('404: ' + req.originalUrl)

@@ -1,5 +1,6 @@
 const fileNameRestrictedChars = /[/.<>:"\\|?*]+/g
 const folderNameRestrictedChars = /[.<>:"\\|?*]+/g
+const slashes = /[\\/]+/g
 function FolderSelect() { // eslint-disable-line no-unused-vars
 	let _div
 	let _conf
@@ -38,14 +39,42 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 		}
 	}
 
-	this.setSongData = function(data, isAutoEnabled) {
-		data.path = data.path.replace(/[\\/]+/, '/')
+	let _getUpdatedData = null
+	const onChangeFolder = function() {
+		const data = _getUpdatedData(true)
+
+		// Get subfolder and songname templates according to selected output
+		let templateSubfolder = _conf.defaultSongSubfolder
+		let templateName = _conf.defaultSongName
+		for(const outConf of _conf.outputs) {
+			if(outConf.name === _outputSelector.val()) {
+				if(outConf.songSubfolder)
+					templateSubfolder = outConf.songSubfolder
+				if(outConf.songName)
+					templateName = outConf.templateName
+				break
+			}
+		}
+
+		// Set subfolder value
+		_subfolderSelector.val((metadataTemplateStr(templateSubfolder, data) || '').replace(folderNameRestrictedChars, ''))
+
+		// Set filename value
+		_fileNameSelector.val((metadataTemplateStr(templateName, data) || '').replace(fileNameRestrictedChars, ''))
+	}
+	_outputSelector.change(onChangeFolder)
+
+	this.setSongData = function(data, f_getUpdatedData) {
+		_getUpdatedData = f_getUpdatedData
+
+		// Normalize
+		data.path = data.path.replace(slashes, '/')
 
 		// If already sorted, automatically select output folder where it is sorted
 		_outputSelector.val('')
 		let defaultOutputValue = null
 		for(const outConf of _conf.outputs) {
-			if(data.path.startsWith(outConf.path.replace(/[\\/]+/, '/'))) {
+			if(data.path.startsWith(outConf.path.replace(slashes, '/'))) {
 				_outputSelector.val(outConf.name)
 				defaultOutputValue = outConf
 				break
@@ -53,7 +82,7 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 		}
 
 		if(defaultOutputValue) {
-			defaultOutputValue.path = defaultOutputValue.path.replace(/[\\/]+/, '/')
+			defaultOutputValue.path = defaultOutputValue.path.replace(slashes, '/')
 			// Set subfolder value
 			const subFolder = data.path.slice(
 				defaultOutputValue.path.length,
@@ -68,15 +97,8 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 			)
 			_fileNameSelector.val(subName)
 		} else {
-			if(isAutoEnabled) {
-				_outputSelector.val(_conf.autoOutput)
-			}
-
-			// Set subfolder value
-			_subfolderSelector.val((metadataTemplateStr(_conf.defaultSongSubfolder, data) || '').replace(folderNameRestrictedChars, ''))
-
-			// Set filename value
-			_fileNameSelector.val((metadataTemplateStr(_conf.defaultSongName, data) || '').replace(fileNameRestrictedChars, ''))
+			_outputSelector.val(_conf.autoOutput)
+			onChangeFolder()
 		}
 		_fileNameExt.html(data.origin.slice(data.origin.lastIndexOf('.')))
 	}
@@ -92,19 +114,22 @@ function FolderSelect() { // eslint-disable-line no-unused-vars
 			return null
 		}
 
-		return (`${outputSelection}/${folderNameSelection}/${fileNameSelection}${_fileNameExt.html()}`
+		return (`${outputSelection}/${folderNameSelection}/${fileNameSelection}`
 			.replace(folderNameRestrictedChars, '')
-			.replace(/\/\/+/g, '/'))
+			.replace(slashes, '/')
+			+ _fileNameExt.html())
 	}
 }
 
 function metadataTemplateStr(templates, songData) {
+	const artists = songData['common/artists']
 	const vars = {
-		title: songData.metadata.common.title,
-		artist: songData.metadata.common.artists && songData.metadata.common.artists.length ? songData.metadata.common.artists[0] : null,
-		artists: songData.metadata.common.artists ? songData.metadata.common.artists.join(', ') : null,
-		albumartist: songData.metadata.common.albumartist,
-		album: songData.metadata.common.album,
+		title: songData['common/title'],
+		subtitle: songData['common/subtitle'],
+		artist: artists && artists.length ? artists[0] : null,
+		artists: artists ? artists.join(', ') : null,
+		albumartist: songData['common/albumartist'],
+		album: songData['common/album'],
 	}
 	for(let t of templates) {
 		const neededVars = {};

@@ -62,6 +62,12 @@ body {
 	flex: 1;
 	height: 100%;
 }
+input.datalineValue.dataNum {
+	background-color: #ddbbdd;
+}
+input.datalineValue.dataList {
+	background-color: #ddddbb;
+}
 .propertylinePicture {
 	position: relative;
 	display: inline-block;

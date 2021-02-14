@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const utils = require('./utils')
 const musicMetadata = require('music-metadata')
+const nodeID3 = require('node-id3')
 
 let ids = 0
 const getNewId = () => 's'+ (((ids++)+Math.random())*10000|0).toString(36)
@@ -142,6 +143,46 @@ function SongBrowser() {
 		const songInfo = this.getSongInfoById(songId)
 		if(updateData.path && songInfo && !songInfo.updating) {
 			songInfo.updating = true // antispam
+
+			// TODO: Update Metadata here
+			const ext = utils.getExt(songInfo.path)
+			if(ext === 'mp3') {
+				const nodeID3Data = {}
+
+				const id3Mapping = {
+					'common/title': 'title',
+					'common/subtitle': 'subtitle',
+
+					'common/album': 'album',
+					// 'common/artist': 'artist',
+					'common/composer': 'composer',
+					'common/conductor': 'conductor',
+					'common/publisher': 'publisher',
+
+					'common/language': 'language',
+					'common/year': 'year',
+					'common/encodedBy': 'encodedBy',
+					'common/copyright': 'copyright',
+					// 'common/genre': 'genre',
+					// 'common/comment': 'comment',
+				}
+				for(const metadataKey in updateData) {
+					if(metadataKey in id3Mapping)
+						nodeID3Data[id3Mapping[metadataKey]] = updateData[metadataKey]
+					else if(metadataKey === 'common/artists')
+						nodeID3Data['artist'] = updateData[metadataKey].join(';')
+					else if(metadataKey === 'common/genre')
+						nodeID3Data['genre'] = updateData[metadataKey].join(';')
+					else if(!(metadataKey in ['path']))
+						console.warn('Unsuported updating ' + metadataKey + ' metadata: Not updated.')
+				}
+
+				console.log(nodeID3Data)
+				const success = nodeID3.write(nodeID3Data, songInfo.path)
+				if(!success) console.warn('Failed to update metadata !')
+			} else {
+				console.warn('Updating metadata not implemented for '+ ext + ' files: Not updated.')
+			}
 
 			// Check and replace output name with output path in requested new path
 			const newPath = updateData.path.split('/')
