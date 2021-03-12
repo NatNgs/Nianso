@@ -154,27 +154,30 @@ function SongBrowser() {
 					'common/subtitle': 'subtitle',
 
 					'common/album': 'album',
-					// 'common/artist': 'artist',
+					'common/artists': 'artist',
 					'common/composer': 'composer',
 					'common/conductor': 'conductor',
 					'common/publisher': 'publisher',
 
 					'common/language': 'language',
 					'common/year': 'year',
-					'common/encodedBy': 'encodedBy',
+					'common/encodedby': 'encodedBy',
 					'common/copyright': 'copyright',
-					// 'common/genre': 'genre',
+					'common/genre': 'genre',
 					// 'common/comment': 'comment',
 				}
 				for(const metadataKey in updateData) {
-					if(metadataKey in id3Mapping)
-						nodeID3Data[id3Mapping[metadataKey]] = updateData[metadataKey]
-					else if(metadataKey === 'common/artists')
-						nodeID3Data['artist'] = updateData[metadataKey].join(';')
-					else if(metadataKey === 'common/genre')
-						nodeID3Data['genre'] = updateData[metadataKey].join(';')
-					else if(!(metadataKey in ['path']))
+					if(metadataKey === 'path')
+						continue
+					if(metadataKey in id3Mapping) {
+						if(updateData[metadataKey].join) {
+							nodeID3Data[id3Mapping[metadataKey]] = updateData[metadataKey].join(';')
+						} else {
+							nodeID3Data[id3Mapping[metadataKey]] = updateData[metadataKey]
+						}
+					} else {
 						console.warn('Unsuported updating ' + metadataKey + ' metadata: Not updated.')
+					}
 				}
 
 				console.log(nodeID3Data)

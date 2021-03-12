@@ -3,7 +3,8 @@ const specialMetadataCommonKeys = [
 	'artist', 'artists',
 	'title', 'subtitle',
 	'album', 'albumartist',
-	'genre', 'year', 'rating', 'comment', 'picture', 'duration'
+	'genre', 'year', 'rating', 'comment', 'picture', 'duration',
+	'language', 'composer', 'conductor', 'publisher', 'encodedBy', 'copyright'
 ]
 
 function SongPage(data) { // eslint-disable-line no-unused-vars
@@ -22,8 +23,9 @@ function SongPage(data) { // eslint-disable-line no-unused-vars
 				displayValue = $('<input type="number" class="dataNum"/>').val(+value)
 				_editableFields[editionKey] = (() => +displayValue.val())
 			} else if(editionType === 'list') {
-				displayValue = $('<input type="text" class="dataList"/>').val((value || []).join(', '))
-				_editableFields[editionKey] = (() => displayValue.val().split(/[,;]+/).map((e) => e.trim()).filter((e) => e))
+				value = (value.join ? value : [value]).map((a) => a.trim()).filter((a) => a).sort().join(', ')
+				displayValue = $('<input type="text" class="dataList"/>').val(value)
+				_editableFields[editionKey] = (() => displayValue.val().split(/[,;]+/g).map((e) => e.trim()).filter((e) => e)).sort()
 			} else {
 				displayValue = $(`<input type="${editionType}"/>`).val(value.trim())
 				_editableFields[editionKey] = (() => displayValue.val().trim())
@@ -85,19 +87,18 @@ function SongPage(data) { // eslint-disable-line no-unused-vars
 		container.append(createPropertyLine('Album', data.metadata.common.album || '', 'common/album'))
 		container.append(createPropertyLine(
 			'Album Artist',
-			data.metadata.common.albumartist || (artists.length && artists[0]) || '',
-			'common/albumartist'
+			data.metadata.common.albumartist || (artists.length && artists[0]) || ''
 		))
 
 		container.append('<br/>')
 
 		// Other editable data
 		container.append(createPropertyLine('Year', data.metadata.common.year || '', 'common/year'))
-		container.append(createPropertyLine('Language', data.metadata.common.language || '', 'common/language'))
-		container.append(createPropertyLine('Composer', data.metadata.common.composer || '', 'common/composer'))
+		container.append(createPropertyLine('Languages', data.metadata.common.language || '', 'common/language', 'list'))
+		container.append(createPropertyLine('Composers', data.metadata.common.composer || '', 'common/composer', 'list'))
 		container.append(createPropertyLine('Conductor', data.metadata.common.conductor || '', 'common/conductor'))
 		container.append(createPropertyLine('Publisher', data.metadata.common.publisher || '', 'common/publisher'))
-		container.append(createPropertyLine('EncodedBy', data.metadata.common.encodedBy || '', 'common/encodedBy'))
+		container.append(createPropertyLine('Encoded by', data.metadata.common.encodedBy || '', 'common/encodedby'))
 		container.append(createPropertyLine('Copyright', data.metadata.common.copyright || '', 'common/copyright'))
 
 		container.append('<br/>')
