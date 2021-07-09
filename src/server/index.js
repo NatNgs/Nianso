@@ -6,6 +6,7 @@ const utils = require('./utils')
 const songBrowser = require('./songBrowser')
 
 // Load previous data and song list
+console.debug('Loading data...')
 const startTime = new Date().getTime()
 songBrowser.load(config,
 	(count) => console.debug(`Data fully loaded (Duration: ${((new Date().getTime()-startTime)/1000).toFixed(2)}s for ${count} songs)`)

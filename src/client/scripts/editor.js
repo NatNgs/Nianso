@@ -25,7 +25,7 @@ function SongPage(data) { // eslint-disable-line no-unused-vars
 			} else if(editionType === 'list') {
 				value = (value.join ? value : [value]).map((a) => a.trim()).filter((a) => a).sort().join(', ')
 				displayValue = $('<input type="text" class="dataList"/>').val(value)
-				_editableFields[editionKey] = (() => displayValue.val().split(/[,;]+/g).map((e) => e.trim()).filter((e) => e)).sort()
+				_editableFields[editionKey] = (() => displayValue.val().split(/[,;]+/g).map((e) => e.trim()).filter((e) => e).sort())
 			} else {
 				displayValue = $(`<input type="${editionType}"/>`).val(value.trim())
 				_editableFields[editionKey] = (() => displayValue.val().trim())
